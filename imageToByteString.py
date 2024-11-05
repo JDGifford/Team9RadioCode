@@ -19,6 +19,8 @@ def getImageData():
         
     end = datetime.datetime.now()
     print(end-start)
+    
+    sendArray.insert(0, len(sendArray)) #adds the length of the array to the start of it
     return sendArray
 
     #for s in sendArray:
