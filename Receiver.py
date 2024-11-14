@@ -33,7 +33,7 @@ radio.dynamic_payloads = True
 radio.listen = True
 count = 0
 
-if radio.available():
+if radio.available(): # Gets the number of payloads expected to be received
     length = radio.get_dynamic_payload_size()
     imageSize = radio.read(length)
 
