@@ -43,7 +43,8 @@ for c in range(arraySize):
     iterator = 0
     failures = 0
     while iterator < arraySize:
-        if not radio.write_fast(payload[iterator]):
+        buffer = struct.pack("<b", payload[iterator])
+        if not radio.write_fast(buffer):
             failures += 1
             radio.reuse_tx()
             if failures > 99 and iterator < 7 and c < 2:
