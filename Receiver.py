@@ -37,8 +37,8 @@ length = 0
 while (length == 0):
     if radio.available(): # Gets the number of payloads expected to be received
         length = radio.get_dynamic_payload_size()
-        imageSize = struct.unpack("<I", radio.read(length))[0]
-
+        imageSize = radio.read(length)
+        print(imageSize)
 #try:
 #    while (True):
 #        if radio.available():
@@ -65,5 +65,6 @@ while (count < length):
 oFile = open("outputZip.zip", "wb")
 for l in output:
     oFile.write(l)
-    oFile.close()
-    radio.listen = False
+    
+oFile.close()
+radio.listen = False
