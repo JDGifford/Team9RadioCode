@@ -2,6 +2,7 @@
 
 import time
 import struct
+import hashlib
 from pyrf24 import RF24, RF24_PA_LOW, RF24_DRIVER
 from imageToByteString import getImageData
 
@@ -38,7 +39,7 @@ while (imageSize == 0):
     if radio.available(): # Gets the number of payloads expected to be received
         length = radio.get_dynamic_payload_size()
         payload = radio.read(length)
-        imageSize = struct.unpack("<L", payload)[0]
+        imageSize = struct.unpack("L", payload)[0]
         print(imageSize)
 #try:
 #    while (True):
@@ -68,4 +69,5 @@ for l in output:
     oFile.write(l)
     
 oFile.close()
+print("Transmission complete.")
 radio.listen = False
