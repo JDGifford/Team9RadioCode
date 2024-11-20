@@ -43,8 +43,8 @@ for c in range(arraySize):
     iterator = 0
     failures = 0
     while iterator < arraySize:
-        buffer = struct.pack("<b", payload[iterator])
-        if not radio.write_fast(buffer):
+        #buffer = struct.pack("<b", payload[iterator])
+        if not radio.write_fast(payload[iterator]):
             failures += 1
             radio.reuse_tx()
             if failures > 99 and iterator < 7 and c < 2:
@@ -52,4 +52,4 @@ for c in range(arraySize):
                 print("Make sure receiver is listening. Exiting sending program")
                 radio.flush_tx()
                 break
-            iterator += 1
+        iterator += 1
