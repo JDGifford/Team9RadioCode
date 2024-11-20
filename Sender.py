@@ -36,7 +36,7 @@ arraySize = len(payload)
 
 radio.listen = False
 
-radio.write_fast(arraySize) # send the number of packets in the image first
+#radio.write_fast(arraySize) # send the number of packets in the image first
 for c in range(arraySize):
     radio.flush_tx()
     iterator = 0
