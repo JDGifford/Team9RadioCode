@@ -65,4 +65,4 @@ while iterator < arraySize:
     iterator += 1
 
 end = time.monotonic()
-print (start-end)
+print (end-start)
