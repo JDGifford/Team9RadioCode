@@ -33,11 +33,11 @@ radio.open_rx_pipe(1, address[1])
 radio.dynamic_payloads = True
 
 arraySize = len(payload)
-
 radio.listen = False
 
 print("Sending array size..." + str(arraySize))
-radio.write_fast(struct.pack("<L", arraySize)) # send the number of packets in the image first
+while not (radio.write_fast(struct.pack("<L", arraySize))): # send the number of packets in the image first
+    radio.reuse_tx()
 
 radio.flush_tx()
 iterator = 0
