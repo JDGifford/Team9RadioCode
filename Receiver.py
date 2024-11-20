@@ -46,7 +46,8 @@ try:
             print("Recieved Payload: " + str(payload))
             count += 1
 except (KeyboardInterrupt): #Testing to see if we can get the file and just manually ending when it's all received
-    oFile = open("outputImage.png", "w")
+    oFile = open("outputImage.png", "wb")
     for l in output:
         oFile.write(l)
+    oFile.close()
     radio.listen = False
