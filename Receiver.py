@@ -32,12 +32,13 @@ radio.dynamic_payloads = True
 
 radio.listen = True
 count = 0
-length = 0
+imageSize = 0
 
 while (length == 0):
     if radio.available(): # Gets the number of payloads expected to be received
         length = radio.get_dynamic_payload_size()
-        imageSize = radio.read(length)
+        payload = radio.read(length)
+        imageSize = payload[0]
         print(imageSize)
 #try:
 #    while (True):
@@ -54,7 +55,7 @@ while (length == 0):
 #    oFile.close()
 #    radio.listen = False
 
-while (count < length):
+while (count < imageSize):
         if radio.available():
             length = radio.get_dynamic_payload_size()
             payload = radio.read(length)
