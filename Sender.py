@@ -36,7 +36,9 @@ arraySize = len(payload)
 
 radio.listen = False
 
+print("Sending array size..." + str(arraySize))
 radio.write_fast(struct.pack("<I", arraySize)) # send the number of packets in the image first
+
 radio.flush_tx()
 iterator = 0
 failures = 0
