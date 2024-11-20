@@ -37,7 +37,7 @@ length = 0
 while (length == 0):
     if radio.available(): # Gets the number of payloads expected to be received
         length = radio.get_dynamic_payload_size()
-        imageSize = radio.read(struct.unpack("<I", length)[0])
+        imageSize = struct.unpack("<I", radio.read(length))[0]
 
 #try:
 #    while (True):
