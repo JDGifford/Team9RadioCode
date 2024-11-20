@@ -38,12 +38,12 @@ radio.listen = False
 
 radio.write_fast(arraySize) # send the number of packets in the image first
 for c in range(arraySize):
-    
     radio.flush_tx()
     iterator = 0
     failures = 0
     while iterator < arraySize:
         #buffer = struct.pack("<b", payload[iterator])
+        print("Sending packet " + str(iterator) + "...")
         if not radio.write_fast(payload[iterator]):
             failures += 1
             radio.reuse_tx()
@@ -52,4 +52,5 @@ for c in range(arraySize):
                 print("Make sure receiver is listening. Exiting sending program")
                 radio.flush_tx()
                 break
+        
         iterator += 1

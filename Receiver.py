@@ -35,10 +35,18 @@ count = 0
 
 if radio.available(): # Gets the number of payloads expected to be received
     length = radio.get_dynamic_payload_size()
-    imageSize = radio.read(length)
+    #imageSize = radio.read(length)
 
-while (count < imageSize):
-    length = radio.get_dynamic_payload_size()
-    payload = radio.read(length)
-    output.append(payload)
-    count += 1
+try:
+    while (True):
+        if radio.available():
+            length = radio.get_dynamic_payload_size()
+            payload = radio.read(length)
+            output.append(payload)
+            print("Recieved Payload: " + str(payload))
+            count += 1
+except (KeyboardInterrupt): #Testing to see if we can get the file and just manually ending when it's all received
+    oFile = open("outputImage.png", "w")
+    for l in output:
+        oFile.write(l)
+    radio.listen = False
