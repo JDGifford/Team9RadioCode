@@ -2,6 +2,7 @@
 
 import time
 import struct
+import hashlib
 from pyrf24 import RF24, RF24_PA_LOW, RF24_DRIVER
 from imageToByteString import getImageData
 
@@ -32,13 +33,41 @@ radio.dynamic_payloads = True
 
 radio.listen = True
 count = 0
+imageSize = 0
 
-if radio.available(): # Gets the number of payloads expected to be received
-    length = radio.get_dynamic_payload_size()
-    imageSize = radio.read(length)
+while (imageSize == 0):
+    if radio.available(): # Gets the number of payloads expected to be received
+        length = radio.get_dynamic_payload_size()
+        payload = radio.read(length)
+        imageSize = struct.unpack("L", payload)[0]
+        print(imageSize)
+#try:
+#    while (True):
+#        if radio.available():
+#            length = radio.get_dynamic_payload_size()
+#            payload = radio.read(length)
+#            output.append(payload)
+#            print("Recieved Payload: " + str(payload))
+#            count += 1
+#except (KeyboardInterrupt): #Testing to see if we can get the file and just manually ending when it's all received
+#    oFile = open("outputZip.zip", "wb")
+#    for l in output:
+#        oFile.write(l)
+#    oFile.close()
+#    radio.listen = False
 
 while (count < imageSize):
-    length = radio.get_dynamic_payload_size()
-    payload = radio.read(length)
-    output.append(payload)
-    count += 1
+        if radio.available():
+            length = radio.get_dynamic_payload_size()
+            payload = radio.read(length)
+            output.append(payload)
+            print("Recieved Payload: " + str(payload))
+            count += 1    
+
+oFile = open("outputZip.zip", "wb")
+for l in output:
+    oFile.write(l)
+    
+oFile.close()
+print("Transmission complete.")
+radio.listen = False

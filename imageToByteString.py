@@ -5,7 +5,7 @@ import struct
 def getImageData():
     ba = []
 
-    with open("deathstarredcircle.png", "rb") as image:
+    with open("FilesToSend.zip", "rb") as image:
         im = image.read()
         ba = bytearray(im)
 

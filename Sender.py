@@ -4,6 +4,7 @@
 
 import time
 import struct
+import hashlib
 from pyrf24 import RF24, RF24_PA_LOW, RF24_DRIVER
 from imageToByteString import getImageData
 
@@ -19,6 +20,8 @@ radio = RF24(CE_PIN, CSN_PIN)
 
 payload = getImageData() # store the payloads to send
 
+#Compute MD5 Sum
+
 address = [b"1node", b"2node"]
 
 if not radio.begin():
@@ -33,23 +36,37 @@ radio.open_rx_pipe(1, address[1])
 radio.dynamic_payloads = True
 
 arraySize = len(payload)
-
 radio.listen = False
 
-radio.write_fast(arraySize) # send the number of packets in the image first
-for c in range(arraySize):
-    
-    radio.flush_tx()
-    iterator = 0
-    failures = 0
-    while iterator < arraySize:
-        buffer = struct.pack("<b", payload[iterator])
-        if not radio.write_fast(buffer):
+start = time.monotonic()
+print("Sending array size..." + str(arraySize))
+sent = False
+while (not sent):
+    if (radio.write(struct.pack("L", arraySize))): # send the number of packets in the image first
+        sent = True
+        print("Array Size sending successful.")
+    else:
+        radio.reuse_tx()
+
+radio.flush_tx()
+iterator = 0
+failures = 0
+while iterator < arraySize:
+    print("Sending packet " + str(iterator) + "...")
+    packetSent = False
+    while (not packetSent):
+        if radio.write(payload[iterator]):
+            packetSent = True
+        else:
             failures += 1
             radio.reuse_tx()
-            if failures > 99 and iterator < 7 and c < 2:
+            if failures > 99 and iterator < 7:
                 iterator = arraySize + 1
                 print("Make sure receiver is listening. Exiting sending program")
                 radio.flush_tx()
                 break
-            iterator += 1
+    
+    iterator += 1
+
+end = time.monotonic()
+print (end-start)
