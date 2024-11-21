@@ -42,7 +42,7 @@ start = time.monotonic()
 print("Sending array size..." + str(arraySize))
 sent = False
 while (not sent):
-    if (radio.write_fast(struct.pack("L", arraySize))): # send the number of packets in the image first
+    if (radio.write(struct.pack("L", arraySize))): # send the number of packets in the image first
         sent = True
         print("Array Size sending successful.")
     else:
@@ -53,14 +53,18 @@ iterator = 0
 failures = 0
 while iterator < arraySize:
     print("Sending packet " + str(iterator) + "...")
-    if not radio.write_fast(payload[iterator]):
-        failures += 1
-        radio.reuse_tx()
-        if failures > 99 and iterator < 7:
-            iterator = arraySize + 1
-            print("Make sure receiver is listening. Exiting sending program")
-            radio.flush_tx()
-            break
+    packetSent = False
+    while (not packetSent):
+        if radio.write(payload[iterator]):
+            packetSent = True
+        else:
+            failures += 1
+            radio.reuse_tx()
+            if failures > 99 and iterator < 7:
+                iterator = arraySize + 1
+                print("Make sure receiver is listening. Exiting sending program")
+                radio.flush_tx()
+                break
     
     iterator += 1
 
