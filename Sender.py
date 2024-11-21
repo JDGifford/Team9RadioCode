@@ -20,8 +20,6 @@ radio = RF24(CE_PIN, CSN_PIN)
 
 payload = getImageData() # store the payloads to send
 
-#Compute MD5 Sum
-
 address = [b"1node", b"2node"]
 
 if not radio.begin():
@@ -35,6 +33,7 @@ radio.open_tx_pipe(address[0])
 radio.open_rx_pipe(1, address[1])
 
 radio.dynamic_payloads = True
+radio.ack_payloads = True
 
 arraySize = len(payload)
 radio.listen = False
@@ -57,7 +56,14 @@ while iterator < arraySize:
     packetSent = False
     while (not packetSent):
         if radio.write(payload[iterator]):
-            packetSent = True
+            if (radio.available()):
+                result = radio.read(radio.get_dynamic_payload_size())
+                rCount = struct.unpack("L", result)[0]
+                if (iterator == rCount):
+                    print("Count matched, proceeding")
+                    packetSent = True
+                else:
+                    radio.reuse_tx()
         else:
             failures += 1
             radio.reuse_tx()
@@ -65,8 +71,7 @@ while iterator < arraySize:
                 iterator = arraySize + 1
                 print("Make sure receiver is listening. Exiting sending program")
                 radio.flush_tx()
-                break
-    
+                break   
     iterator += 1
 
 end = time.monotonic()

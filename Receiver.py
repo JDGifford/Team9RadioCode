@@ -31,6 +31,7 @@ radio.open_tx_pipe(address[1])
 radio.open_rx_pipe(1, address[0])
 
 radio.dynamic_payloads = True
+radio.ack_payloads = True
 
 radio.listen = True
 count = 0
@@ -42,20 +43,8 @@ while (imageSize == 0):
         payload = radio.read(length)
         imageSize = struct.unpack("L", payload)[0]
         print(imageSize)
-#try:
-#    while (True):
-#        if radio.available():
-#            length = radio.get_dynamic_payload_size()
-#            payload = radio.read(length)
-#            output.append(payload)
-#            print("Recieved Payload: " + str(payload))
-#            count += 1
-#except (KeyboardInterrupt): #Testing to see if we can get the file and just manually ending when it's all received
-#    oFile = open("outputZip.zip", "wb")
-#    for l in output:
-#        oFile.write(l)
-#    oFile.close()
-#    radio.listen = False
+
+radio.write_ack_payload(struct.pack("L", count))        
 
 while (count < imageSize):
         if radio.available():
@@ -63,7 +52,8 @@ while (count < imageSize):
             payload = radio.read(length)
             output.append(payload)
             print("Recieved Payload: " + str(payload))
-            count += 1    
+            count += 1   
+             
 
 oFile = open("outputZip.zip", "wb")
 for l in output:
