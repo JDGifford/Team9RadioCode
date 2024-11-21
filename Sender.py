@@ -20,8 +20,14 @@ radio = RF24(CE_PIN, CSN_PIN)
 
 payload = getImageData() # store the payloads to send
 
-payloadMD5 = hashlib.md5(payload).digest
+temp = bytearray()
+for t in bytearray:
+    temp.extend(t)
+
+payloadMD5 = hashlib.md5(temp).digest
 print(len(payloadMD5))
+
+temp = 0 #just so we're not storing something so huge in memory the whole time
 
 address = [b"1node", b"2node"]
 

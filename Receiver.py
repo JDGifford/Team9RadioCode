@@ -58,7 +58,11 @@ while (not finished):
             if (length < 32):
                 finished = True
 
-outputMD5 = hashlib.md5(output).digest()
+temp = bytearray()
+for t in output:
+    temp.extend(t)
+
+outputMD5 = hashlib.md5(temp).digest()
 
 getmd5 = False
 md5Result = 0
